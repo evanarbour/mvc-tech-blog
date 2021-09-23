@@ -16,10 +16,7 @@ const hbs = exphbs.create({ helpers });
 
 const sess = {
   secret: 'really top secret',
-  cookie: {
-      // session set to expire after one hour (1000 milliseconds * 60 seconds * 60 minutes = 1 hour) of being logged in
-    maxAge: 1000 * 60 * 60
-  },
+  cookie: {},
   resave: false,
   saveUninitialized: true,
   store: new SequelizeStore({

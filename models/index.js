@@ -5,27 +5,31 @@ const Comment = require('./Comment');
 // use index.js to create connections to each model by how they interact in the application
 
 User.hasMany(Post, {
-    // connection via db goes here
+    foreignKey: 'user_id'
 });
   
 Post.belongsTo(User, {
-    // connection via db goes here
+    foreignKey: 'user_id',
+    onDelete: 'SET NULL'
 });
   
 Comment.belongsTo(User, {
-    // connection via db goes here
+    foreignKey: 'user_id',
+    onDelete: 'SET NULL'
 });
 
 Comment.belongsTo(Post, {
-    // connection via db goes here
+    foreignKey: 'post_id',
+    onDelete: 'SET NULL'
 });
   
 User.hasMany(Comment, {
-    // connection via db goes here
+    foreignKey: 'user_id',
+    onDelete: 'SET NULL'
 });
   
 Post.hasMany(Comment, {
-    // connection via db goes here
+    foreignKey: 'post_id'
 });
   
 module.exports = { User, Post, Comment };
