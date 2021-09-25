@@ -1,10 +1,10 @@
 const { Model, DataTypes } = require('sequelize');
-const bcrypt = require('bcrypt');
 const sequelize = require('../config/connection');
 
 class Comment extends Model {}
 
-Comment.initComment.init(
+// create structure for Comments with columns to store data
+Comment.init(
     {
         id: {
           type: DataTypes.INTEGER,
@@ -18,6 +18,10 @@ Comment.initComment.init(
           validate: {
             len: [1]
           }
+        },
+        date_created: {
+            type: DataTypes.STRING, 
+            allowNull: false
         },
         user_id: {
           type: DataTypes.INTEGER,
