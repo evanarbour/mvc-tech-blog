@@ -4,16 +4,16 @@ const { Post, User, Comment } = require('../models');
 
 
 // GET request for all posts -> homepage
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
+    try {
     console.log('GET request received...');
-    Post.findAll({
+     const PostData = await Post.findAll({
       attributes: [
         'id',
         'title',
         'post_content',
         'date_created'
       ],
-      
       include: [
         {
         // include any comments (and the user data) attached to the posts
@@ -29,22 +29,62 @@ router.get('/', (req, res) => {
           model: User,
           attributes: ['username']
         }
-      ]
-    })
-      .then(dbPostData => {
-        const posts = dbPostData.map(post => post.get({ plain: true }));
-        
+      ]});
+        const posts = PostData.map((post) => post.get({ plain: true }));
         // take the data and render it to homepage.handlebars in current session
         res.render('homepage', {
           posts,
           loggedIn: req.session.loggedIn,
           username: req.session.username
         });
-      })
-      .catch(err => {
+
+    } catch(err) {
         console.log(err);
         res.status(500).json(err);
-      });
+      }
+});
+
+// get route for a single post
+router.get('/post/:id', async (req, res) => {
+    try {
+        const postData = await Post.findOne({
+            where: {
+              id: req.params.id
+            },
+            attributes: [
+              'id',
+              'title',
+              'post_content',
+              'date_created'
+            ],
+            include: [
+              {
+                model: Comment,
+                attributes: ['id', 'comment_text', 'date_created','user_id', 'post_id'],
+                include: {
+                  model: User,
+                  attributes: ['username']
+                }
+              },
+              {
+                model: User,
+                attributes: ['username']
+              }
+            ]
+          })
+              // serialize the data
+              const post = postData.get({ plain: true })
+        
+              // render the data to post.handlebars 
+              res.render('post', {
+                post,
+                loggedIn: req.session.loggedIn,
+                username: req.session.username
+              });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json(err);
+    };
 });
 
 // login route 
@@ -56,55 +96,6 @@ router.get('/login', (req, res) => {
     } // or render login.handlebars
     res.render('login');
 });
-
-// get route for a single post
-router.get('/post/:id', (req, res) => {
-    Post.findOne({
-      where: {
-        id: req.params.id
-      },
-      attributes: [
-        'id',
-        'title',
-        'post_content',
-        'date_created'
-      ],
-      include: [
-        {
-          model: Comment,
-          attributes: ['id', 'comment_text', 'date_created','user_id', 'post_id'],
-          include: {
-            model: User,
-            attributes: ['username']
-          }
-        },
-        {
-          model: User,
-          attributes: ['username']
-        }
-      ]
-    })
-      .then(dbPostData => {
-        // if there is no post with the ID requested by the user, post error message
-        if (!dbPostData) {
-          res.status(404).json({ message: 'No post found with this id. Try again!' });
-          return;
-        }
-        // serialize the data
-        const post = dbPostData.get({ plain: true })
-  
-        // render the data to post.handlebars 
-        res.render('post', {
-          post,
-          loggedIn: req.session.loggedIn,
-          username: req.session.username
-        });
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(500).json(err);
-      });
-  });
   
   module.exports = router;
 
