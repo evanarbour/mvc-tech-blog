@@ -1,0 +1,17 @@
+[
+    {
+      "title": "My First Post!",
+      "post_content": "Hey all! Welcome to my first post. Excited to get things going. More to come.",
+      "user_id": "1"
+    },
+    {
+      "title": "Owning my first restaurant",
+      "post_content": "There's plenty of tips and tricks to owning your restaurant. I'm going to break down the essentials of what you need to know.",
+      "user_id": "2"
+    },
+    {
+      "title": "Is this is on?",
+      "post_content": "Can anybody see this? Wondering if I'm doing this correctly....",
+      "user_id": "3"
+    }
+]

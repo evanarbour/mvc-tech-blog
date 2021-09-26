@@ -20,8 +20,9 @@ Comment.init(
           }
         },
         date_created: {
-            type: DataTypes.STRING, 
-            allowNull: false
+            type: DataTypes.DATE, 
+            allowNull: false,
+            defaultValue: DataTypes.NOW,
         },
         user_id: {
           type: DataTypes.INTEGER,
